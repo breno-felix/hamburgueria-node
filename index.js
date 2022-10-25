@@ -3,7 +3,7 @@ const uuid = require("uuid");
 const cors = require("cors");
 
 const server = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 server.use(express.json());
 server.use(cors());
