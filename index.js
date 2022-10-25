@@ -1,10 +1,12 @@
 const express = require("express");
 const uuid = require("uuid");
+const cors = require("cors");
 
 const server = express();
-const port = 3000;
+const port = 3001;
 
 server.use(express.json());
+server.use(cors());
 
 const orders = [];
 
@@ -33,19 +35,23 @@ server.get("/orders", printMethodAndUrl, (req, res) => {
 });
 
 server.post("/orders", printMethodAndUrl, (req, res) => {
-  const { clienteOrder, clienteName, price } = req.body;
+  try {
+    const { clienteOrder, clienteName, price } = req.body;
 
-  const order = {
-    id: uuid.v4(),
-    clienteOrder,
-    clienteName,
-    price,
-    status: "Em preparação",
-  };
+    const order = {
+      id: uuid.v4(),
+      clienteOrder,
+      clienteName,
+      price,
+      status: "Em preparação",
+    };
 
-  orders.push(order);
+    orders.push(order);
 
-  return res.json(order);
+    return res.status(201).json(order);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 server.put("/orders/:id", checkUserId, printMethodAndUrl, (req, res) => {
